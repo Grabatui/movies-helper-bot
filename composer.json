@@ -9,12 +9,10 @@
     "license": "MIT",
     "require": {
         "php": "^7.4",
-        "botman/botman": "^2.6",
-        "botman/driver-telegram": "^1.6",
-        "botman/driver-web": "^1.5",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "irazasyed/telegram-bot-sdk": "^3.4",
         "laravel/framework": "^8.12",
         "laravel/tinker": "^2.5"
     },
@@ -29,7 +27,9 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "disable-tls": true,
+        "secure-http": false
     },
     "extra": {
         "laravel": {

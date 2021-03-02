@@ -1,7 +1,7 @@
 <?php
 
-use BotMan\BotMan\BotManServiceProvider;
-use BotMan\Drivers\Telegram\Providers\TelegramServiceProvider;
+use Telegram\Bot\Laravel\Facades\Telegram;
+use Telegram\Bot\Laravel\TelegramServiceProvider;
 
 return [
 
@@ -166,7 +166,6 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-        BotManServiceProvider::class,
         TelegramServiceProvider::class,
     ],
 
@@ -218,6 +217,6 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
-        'Botman' => \BotMan\BotMan\Facades\BotMan::class,
+        'Telegram' => Telegram::class,
     ],
 ];
