@@ -1,7 +1,6 @@
 <?php
 
-use Telegram\Bot\Laravel\Facades\Telegram;
-use Telegram\Bot\Laravel\TelegramServiceProvider;
+use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
 
 return [
 
@@ -166,7 +165,9 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-        TelegramServiceProvider::class,
+        App\Telegram\ServiceProvider::class,
+
+        IdeHelperServiceProvider::class,
     ],
 
     /*
@@ -216,7 +217,5 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-
-        'Telegram' => Telegram::class,
     ],
 ];
