@@ -40,7 +40,9 @@ class Gate
 
             $rawResponse = $rawResponse->getBody()->getContents();
 
-            $response = json_decode($rawResponse, true, 512, JSON_THROW_ON_ERROR);
+            $response = $this->parseRawResponse($rawResponse);
+
+            $this->debugResponse($request, $response);
 
             if ( ! isset($response['ok']) || ! $response['ok']) {
                 throw new WrongResponseException($rawResponse);
@@ -60,25 +62,47 @@ class Gate
 
         $uri = sprintf('/bot%s%s', $token, $request->getUri());
 
-        $logMessage = sprintf('Telegram: Request [%s]: %s', $request->getMethod()->getValue(), $uri);
-
         $parameters = [];
         if ($request instanceof AbstractGetRequest) {
-            $uri .= '?' . http_build_query($request->getRequestQuery());
-
-            $this->logger->debug(
-                $logMessage,
-                ['query' => $request->getRequestQuery()]
-            );
+            $uri .= '?' . http_build_query($request->toArray());
         } elseif ($request instanceof AbstractPostRequest) {
-            $parameters['json'] = $request->getRequestData();
-
-            $this->logger->debug(
-                $logMessage,
-                ['post' => $request->getRequestData()]
-            );
+            $parameters['json'] = $request->toArray();
         }
 
+        $this->debugRequest($request, $request->toArray());
+
         return [$uri, $parameters];
+    }
+
+    /**
+     * @param string $rawResponse
+     * @return array
+     * @throws JsonException
+     */
+    private function parseRawResponse(string $rawResponse): array
+    {
+        return json_decode($rawResponse, true, 512, JSON_THROW_ON_ERROR);
+    }
+
+    private function debugRequest(RequestInterface $request, array $data = []): void
+    {
+        $logMessage = sprintf(
+            'Telegram: Request [%s]: %s',
+            $request->getMethod()->getValue(),
+            $request->getUri()
+        );
+
+        $this->logger->debug($logMessage, $data);
+    }
+
+    private function debugResponse(RequestInterface $request, array $response): void
+    {
+        $logMessage = sprintf(
+            'Telegram: Response [%s]: %s',
+            $request->getMethod()->getValue(),
+            $request->getUri()
+        );
+
+        $this->logger->debug($logMessage, $response);
     }
 }

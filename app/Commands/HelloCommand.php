@@ -13,11 +13,12 @@ class HelloCommand extends AbstractCommand
 
     public function handle(): void
     {
-        $answerRequest = new SendMessageRequest(
-            $this->request->message['chat']['id'],
-            'Hello, ' . $this->request->message['from']['first_name']
-        );
+        $from = $this->getRequestMessage()->from;
 
-        $this->facade->sendMessage($answerRequest);
+        $answer = $from ? sprintf('Hello, %s!', $from->firstName) : 'Hello!';
+
+        $this->facade->sendMessage(
+            new SendMessageRequest($this->getChat(), $answer)
+        );
     }
 }

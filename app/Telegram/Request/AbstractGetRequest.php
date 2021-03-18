@@ -12,7 +12,7 @@ abstract class AbstractGetRequest implements RequestInterface
         return new RequestMethod(RequestMethodEnum::GET);
     }
 
-    public function getRequestQuery(): array
+    public function toArray()
     {
         return [];
     }

@@ -2,7 +2,9 @@
 
 namespace App\Telegram\Response;
 
-interface ResponseInterface
+use Illuminate\Contracts\Support\Arrayable;
+
+interface ResponseInterface extends Arrayable
 {
     public function __construct(array $rawResponse);
 }

@@ -14,7 +14,7 @@ use BadMethodCallException;
  */
 class Facade
 {
-    private const POSSIBLE_METHODS = [
+    private const AVAILABLE_METHODS = [
         'getMe',
         'sendMessage',
     ];
@@ -28,7 +28,7 @@ class Facade
 
     public function __call($name, $arguments)
     {
-        if ( ! in_array($name, static::POSSIBLE_METHODS)) {
+        if ( ! in_array($name, static::AVAILABLE_METHODS)) {
             throw new BadMethodCallException();
         }
 

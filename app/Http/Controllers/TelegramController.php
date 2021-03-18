@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Commands\AbstractCommand;
 use App\Telegram\Facade;
+use App\Telegram\Request\SendMessageRequest;
 use App\Telegram\Response\UpdateResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 
 class TelegramController extends Controller
 {
@@ -18,8 +18,13 @@ class TelegramController extends Controller
 
         $command = $this->recognizeCommand($request, $commands);
 
+        // TODO: When we ask for the user's text, we must find the command with a different way
+
         if ( ! $command) {
-            // TODO: I don't understand!
+            $facade->sendMessage(
+                new SendMessageRequest($request->message->chat, 'Sorry! I don\'t understand :(')
+            );
+
             return '';
         }
 
@@ -61,7 +66,7 @@ class TelegramController extends Controller
      */
     private function recognizeCommand(UpdateResponse $response, array $commands): ?AbstractCommand
     {
-        $command = Arr::get($response->message, 'text');
+        $command = $response->message->text;
 
         if ( ! $command || strlen($command) <= 1) {
             return null;

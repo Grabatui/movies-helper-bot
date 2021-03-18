@@ -11,9 +11,4 @@ abstract class AbstractPostRequest implements RequestInterface
     {
         return new RequestMethod(RequestMethodEnum::POST);
     }
-
-    public function getRequestData(): array
-    {
-        return [];
-    }
 }
