@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property int $id
  * @property string $chat_id
+ * @property string $external_id
  * @property string $name
  * @property string $language
  * @property Carbon $created_at

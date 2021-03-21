@@ -4,11 +4,13 @@ namespace App\Telegram\Dto\Keyboard;
 
 /**
  * @description This object represents a custom keyboard with reply options
+ *
+ * @see https://core.telegram.org/bots/api#replykeyboardmarkup
  */
 class ReplyKeyboardMarkup implements KeyboardMarkupInterface
 {
     /**
-     * @var array<int, array<int, KeyboardButton>>
+     * @var KeyboardButtonsRow[]
      *
      * @description Array of button rows, each represented by an Array of KeyboardButton objects
      */
@@ -35,12 +37,35 @@ class ReplyKeyboardMarkup implements KeyboardMarkupInterface
      */
     public ?bool $selective = null;
 
+    public function __construct(array $keyboard)
+    {
+        $this->keyboard = $keyboard;
+    }
+
+    public static function makeFromArray(array $data): self
+    {
+        $inlineKeyboard = [];
+        if ( ! empty($data['keyboard'])) {
+            foreach ($data['keyboard'] as $buttonsRow) {
+                $inlineKeyboard[] = new KeyboardButtonsRow($buttonsRow);
+            }
+        }
+
+        $entity = new static($inlineKeyboard);
+
+        $entity->resizeKeyboard = $data['resize_keyboard'] ?? null;
+        $entity->oneTimeKeyboard = $data['one_time_keyboard'] ?? null;
+        $entity->selective = $data['selective'] ?? null;
+
+        return $entity;
+    }
+
     public function toArray(): array
     {
         return array_merge(
             [
                 'keyboard' => array_map(
-                    fn(KeyboardButton $keyboardButton) => $keyboardButton->toArray(),
+                    fn(KeyboardButtonsRow $keyboardButtonsRow) => $keyboardButtonsRow->toArray(),
                     $this->keyboard
                 ),
             ],

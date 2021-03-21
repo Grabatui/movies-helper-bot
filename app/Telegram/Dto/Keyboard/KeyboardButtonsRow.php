@@ -9,10 +9,10 @@ use App\Telegram\Dto\DtoInterface;
  *
  * @custom
  */
-class InlineKeyboardButtonsRow implements DtoInterface
+class KeyboardButtonsRow implements DtoInterface
 {
     /**
-     * @var InlineKeyboardButton[]
+     * @var KeyboardButton[]
      */
     public array $buttons = [];
 
@@ -23,7 +23,7 @@ class InlineKeyboardButtonsRow implements DtoInterface
 
     public static function makeFromArray(array $data): self
     {
-        $buttons = arrays_to_array_of_objects($data, InlineKeyboardButton::class);
+        $buttons = arrays_to_array_of_objects($data, KeyboardButton::class);
 
         return new static($buttons);
     }
@@ -34,12 +34,12 @@ class InlineKeyboardButtonsRow implements DtoInterface
     public function toArray()
     {
         return array_map(
-            fn(InlineKeyboardButton $button) => $button->toArray(),
+            fn(KeyboardButton $button) => $button->toArray(),
             $this->buttons
         );
     }
 
-    public function add(InlineKeyboardButton $button): void
+    public function add(KeyboardButton $button): void
     {
         $this->buttons[] = $button;
     }

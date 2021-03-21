@@ -11,16 +11,22 @@ class UserRepository
         return new static();
     }
 
-    public function create(string $chatId, string $name, string $language): User
+    public function create(string $chatId, int $externalId, string $name, string $language): User
     {
         $user = new User();
         $user->chat_id = $chatId;
+        $user->external_id = $externalId;
         $user->name = $name;
         $user->language = $language;
 
         $user->save();
 
         return $user;
+    }
+
+    public function getByExternalUserId(int $userId): ?User
+    {
+        return User::query()->where('external_id', $userId)->get()->first();
     }
 
     public function getByChatId(string $chatId): ?User

@@ -26,7 +26,7 @@ class InlineKeyboardMarkup implements KeyboardMarkupInterface
         $inlineKeyboard = [];
         if ( ! empty($data['inline_keyboard'])) {
             foreach ($data['inline_keyboard'] as $buttonsRow) {
-                $inlineKeyboard[] = new InlineKeyboardButtonsRow($buttonsRow);
+                $inlineKeyboard[] = InlineKeyboardButtonsRow::makeFromArray($buttonsRow);
             }
         }
 

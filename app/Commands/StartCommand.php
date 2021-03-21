@@ -2,15 +2,36 @@
 
 namespace App\Commands;
 
+use App\Repositories\UserRepository;
+
 class StartCommand extends AbstractCommand
 {
-    public function getName(): string
+    public static function getName(): string
     {
         return 'start';
     }
 
     public function handle(): void
     {
-        // TODO: Implement handle() method.
+        $externalUser = $this->getRequestMessage()->from;
+
+        if ( ! $externalUser || $externalUser->isBot) {
+            $this->sendAnswerMessage('I can\'t recognize you :(');
+
+            return;
+        }
+
+        $internalUser = UserRepository::getInstance()->getByExternalUserId(
+            $externalUser->id
+        );
+
+        if ($internalUser) {
+            // So, we already registered him. Show default keyboard
+            // TODO: Show default keyboard
+        } else {
+            $this->handleCommand(
+                ShowLanguageSelectCommand::class
+            );
+        }
     }
 }

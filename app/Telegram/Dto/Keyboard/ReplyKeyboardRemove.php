@@ -6,6 +6,8 @@ namespace App\Telegram\Dto\Keyboard;
  * @description Upon receiving a message with this object, Telegram clients will remove the current custom keyboard and
  * display the default letter-keyboard. By default, custom keyboards are displayed until a new keyboard is sent by a
  * bot. An exception is made for one-time keyboards that are hidden immediately after the user presses a button
+ *
+ * @see https://core.telegram.org/bots/api#replykeyboardremove
  */
 class ReplyKeyboardRemove implements KeyboardMarkupInterface
 {
@@ -21,6 +23,20 @@ class ReplyKeyboardRemove implements KeyboardMarkupInterface
      * (has reply_to_message_id), sender of the original message
      */
     public ?bool $selective = null;
+
+    public function __construct(bool $removeKeyboard)
+    {
+        $this->removeKeyboard = $removeKeyboard;
+    }
+
+    public static function makeFromArray(array $data): self
+    {
+        $entity = new static($data['remove_keyboard']);
+
+        $entity->selective = $data['selective'] ?? null;
+
+        return $entity;
+    }
 
     public function toArray(): array
     {

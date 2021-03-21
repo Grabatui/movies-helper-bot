@@ -6,6 +6,8 @@ namespace App\Telegram\Dto\Keyboard;
  * @description Upon receiving a message with this object, Telegram clients will display a reply interface to the user
  * (act as if the user has selected the bot's message and tapped 'Reply'). This can be extremely useful if you want to
  * create user-friendly step-by-step interfaces without having to sacrifice privacy mode
+ *
+ * @see https://core.telegram.org/bots/api#forcereply
  */
 class ForceReply implements KeyboardMarkupInterface
 {
@@ -20,6 +22,20 @@ class ForceReply implements KeyboardMarkupInterface
      * sender of the original message
      */
     public ?bool $selective = null;
+
+    public function __construct(bool $forceReply)
+    {
+        $this->forceReply = $forceReply;
+    }
+
+    public static function makeFromArray(array $data): self
+    {
+        $entity = new static($data['force_reply']);
+
+        $entity->selective = $data['selective'] ?? null;
+
+        return $entity;
+    }
 
     public function toArray(): array
     {

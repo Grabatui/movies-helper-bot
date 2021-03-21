@@ -2,13 +2,15 @@
 
 namespace App\Telegram\Dto\Keyboard;
 
-use Illuminate\Contracts\Support\Arrayable;
+use App\Telegram\Dto\DtoInterface;
 
 /**
  * @description This object represents one button of the reply keyboard. For simple text buttons String can be used
  * instead of this object to specify text of the button
+ *
+ * @see https://core.telegram.org/bots/api#keyboardbutton
  */
-class KeyboardButton implements Arrayable
+class KeyboardButton implements DtoInterface
 {
     /**
      * @description Text of the button. If none of the optional fields are used, it will be sent as a message when the
@@ -34,6 +36,24 @@ class KeyboardButton implements Arrayable
      */
     public ?KeyboardButtonPollType $requestPoll = null;
 
+    public function __construct(string $text)
+    {
+        $this->text = $text;
+    }
+
+    public static function makeFromArray(array $data): self
+    {
+        $entity = new static($data['text']);
+
+        $entity->requestContact = $data['request_contact'] ?? null;
+        $entity->requestLocation = $data['request_location'] ?? null;
+        $entity->requestPoll = ! empty($data['request_poll'])
+            ? KeyboardButtonPollType::makeFromArray($data['request_poll'])
+            : null;
+
+        return $entity;
+    }
+
     public function toArray(): array
     {
         return array_merge(
@@ -43,7 +63,7 @@ class KeyboardButton implements Arrayable
             clean_nullable_fields([
                 'request_contact' => $this->requestContact,
                 'request_location' => $this->requestContact,
-                'request_poll' => $this->requestPoll ? $this->requestPoll->getRequestData() : null,
+                'request_poll' => $this->requestPoll ? $this->requestPoll->toArray() : null,
             ])
         );
     }
