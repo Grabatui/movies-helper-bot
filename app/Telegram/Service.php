@@ -6,6 +6,7 @@ use App\Commands\AbstractCommand;
 use App\Commands\Actions\AbstractAction;
 use App\Telegram\Dto\Message\Message;
 use App\Telegram\Exception\CommandAlreadyExistsException;
+use App\Telegram\Exception\UnknownCommandException;
 use App\Telegram\Exception\UnknownRequestException;
 use App\Telegram\Response\UpdateResponse;
 
@@ -39,6 +40,21 @@ class Service
         }
 
         throw new UnknownRequestException();
+    }
+
+    public function handleCommandByName(string $commandName, UpdateResponse $response): void
+    {
+        if (
+            ! in_array($commandName, $this->commands)
+            && ! in_array($commandName, config('telegram.actions'))
+        ) {
+            throw new UnknownCommandException();
+        }
+
+        /** @var AbstractCommand $command */
+        $command = new $commandName($response);
+
+        $command->handle();
     }
 
     private function setCommands()

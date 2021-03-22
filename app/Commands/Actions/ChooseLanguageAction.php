@@ -15,7 +15,7 @@ class ChooseLanguageAction extends AbstractAction
 
     public function isSatisfied(): bool
     {
-        $internalUser = $this->getOrCreateUserFromCallbackQuery();
+        $internalUser = $this->getOrCreateUserFromMessage();
 
         if ( ! $internalUser) {
             return false;
