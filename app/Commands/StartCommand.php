@@ -16,18 +16,20 @@ class StartCommand extends AbstractCommand
         $externalUser = $this->getRequestMessage()->from;
 
         if ( ! $externalUser || $externalUser->isBot) {
-            $this->sendAnswerMessage('I can\'t recognize you :(');
+            $this->sendAnswerMessage(trans('main.phrases.do_not_understand'));
 
             return;
         }
 
-        $internalUser = UserRepository::getInstance()->getByExternalUserId(
+        $internalUser = UserRepository::getInstance()->getByExternalId(
             $externalUser->id
         );
 
         if ($internalUser) {
             // So, we already registered him. Show default keyboard
-            // TODO: Show default keyboard
+            $this->handleCommand(
+                ShowDefaultMenuCommand::class,
+            );
         } else {
             $this->handleCommand(
                 ShowLanguageSelectCommand::class

@@ -2,6 +2,7 @@
 
 namespace App\Commands\Actions;
 
+use App\Commands\ShowDefaultMenuCommand;
 use App\Commands\ShowLanguageSelectCommand;
 use App\Enum\LanguageEnum;
 use App\Repositories\UserLastMessageRepository;
@@ -32,7 +33,7 @@ class ChooseLanguageAction extends AbstractAction
     {
         $internalUser = $this->getUserFromCallbackQuery();
 
-        $selectedLanguage = $this->request->callbackQuery->data;
+        $selectedLanguage = $this->request->callbackQuery ? $this->request->callbackQuery->data : null;
 
         if ( ! in_array($selectedLanguage, LanguageEnum::ALL)) {
             return;
@@ -45,6 +46,8 @@ class ChooseLanguageAction extends AbstractAction
 
         $this->sendAnswerMessage(trans('main.phrases.after_register'));
 
-        // TODO: Show default keyboard
+        $this->handleCommand(
+            ShowDefaultMenuCommand::class,
+        );
     }
 }

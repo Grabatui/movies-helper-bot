@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Repositories\UserRepository;
 use App\Telegram\Dto\Chat\Chat;
 use App\Telegram\Dto\Message\Message;
+use App\Telegram\Dto\User as UserDto;
 use App\Telegram\Facade;
 use App\Telegram\Request\SendMessageRequest;
 use App\Telegram\Response\UpdateResponse;
@@ -37,43 +38,69 @@ abstract class AbstractCommand
 
     protected function getRequestMessage(): ?Message
     {
-        return $this->request->message;
-    }
+        $message = $this->request->message;
 
-    protected function getChat(): ?Chat
-    {
-        return $this->getRequestMessage() ? $this->getRequestMessage()->chat : null;
+        if ( ! $message) {
+            $message = $this->request->callbackQuery ? $this->request->callbackQuery->message : null;
+        }
+
+        return $message;
     }
 
     protected function sendAnswerMessage(string $message): void
     {
-        if ( ! $this->getChat()) {
+        if ( ! $this->getRequestChat()) {
             return;
         }
 
         $this->facade->sendMessage(
-            new SendMessageRequest($this->getChat(), $message)
+            new SendMessageRequest($this->getRequestChat(), $message)
         );
     }
 
     protected function getUserFromMessage(): ?User
     {
-        $checkRequestMessage = $this->getRequestMessage();
+        $chat = $this->getRequestChat();
 
-        if ( ! $checkRequestMessage || ! $checkRequestMessage->from) {
+        if ( ! $chat) {
             return null;
         }
 
-        return UserRepository::getInstance()->getByExternalUserId(
-            $checkRequestMessage->from->id
+        return UserRepository::getInstance()->getByExternalId(
+            $chat->id
         );
+    }
+
+    protected function getRequestFrom(): ?UserDto
+    {
+        $checkRequestMessage = $this->getRequestMessage();
+
+        $from = $checkRequestMessage ? $checkRequestMessage->from : null;
+
+        if ( ! $from) {
+            $requestCallbackQuery = $this->request->callbackQuery;
+
+            if ($requestCallbackQuery && $requestCallbackQuery->from) {
+                return $requestCallbackQuery->from;
+            }
+        }
+
+        return $from;
+    }
+
+    protected function getRequestChat(): ?Chat
+    {
+        $checkRequestMessage = $this->getRequestMessage();
+
+        return $checkRequestMessage ? $checkRequestMessage->chat : null;
     }
 
     protected function getOrCreateUserFromMessage(): ?User
     {
-        $checkRequestMessage = $this->getRequestMessage();
+        $from = $this->getRequestFrom();
+        $chat = $this->getRequestChat();
 
-        if ( ! $checkRequestMessage || ! $checkRequestMessage->from || ! $checkRequestMessage->chat) {
+        if ( ! $from || ! $chat) {
             return null;
         }
 
@@ -81,9 +108,9 @@ abstract class AbstractCommand
 
         if ( ! $internalUser) {
             $internalUser = UserRepository::getInstance()->create(
-                $checkRequestMessage->chat->id,
-                $checkRequestMessage->from->id,
-                $checkRequestMessage->from->username,
+                $chat->id,
+                $chat->id,
+                $from->username,
                 LanguageEnum::EN
             );
         }

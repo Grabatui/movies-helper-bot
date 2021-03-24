@@ -2,19 +2,16 @@
 
 return [
     'phrases' => [
+        'do_not_understand' => 'I can\'t recognize you :(',
+        'choose_language' => 'What language do you prefer?',
         'after_register' => 'Language is successfully saved!',
+        'main_menu' => 'What to do?',
+    ],
+    'main_menu' => [
+        'add_movie' => 'Add movie',
+        'find_movie' => 'Find added movie',
+        'get_lists' => 'Get lists',
+        'add_list' => 'Add new list',
+        'change_language' => 'Change language',
     ],
 ];
-
-//return [
-//    'Как Вас зовут?' => 'What is your name?',
-//    'Привет, :name!' => 'Hello, :name!',
-//    'Congratulations! You can start using the service' => 'Congratulations! You can start using the service',
-//
-//    'Выберите действие' => 'Select action',
-//    'Добавить фильм' => 'Add movie',
-//    'Найти фильм' => 'Find movie',
-//    'Фильмы в списке' => 'Movies in list',
-//    'Добавить список' => 'Add list',
-//    'Списки' => 'Lists',
-//];

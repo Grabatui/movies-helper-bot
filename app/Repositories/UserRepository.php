@@ -24,7 +24,7 @@ class UserRepository
         return $user;
     }
 
-    public function getByExternalUserId(int $userId): ?User
+    public function getByExternalId(int $userId): ?User
     {
         return User::query()->where('external_id', $userId)->get()->first();
     }

@@ -3,10 +3,10 @@
 namespace App\Commands\Actions;
 
 use App\Commands\AbstractCommand;
-use App\Enum\LanguageEnum;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use App\Telegram\Dto\Message\Message;
+use App\Telegram\Dto\User as UserDto;
 use App\Telegram\Facade;
 use App\Telegram\Response\UpdateResponse;
 
@@ -20,37 +20,24 @@ abstract class AbstractAction extends AbstractCommand
 
     protected function getRequestMessage(): ?Message
     {
-        return $this->request->callbackQuery ? $this->request->callbackQuery->message : null;
+        $message = $this->request->callbackQuery ? $this->request->callbackQuery->message : null;
+
+        if ( ! $message) {
+            $message = parent::getRequestMessage();
+        }
+
+        return $message;
     }
 
-    protected function getOrCreateUserFromMessage(): ?User
+    protected function getRequestFrom(): ?UserDto
     {
-        $checkRequestCallbackQuery = $this->request->callbackQuery;
+        $requestCallbackQuery = $this->request->callbackQuery;
 
-        if ( ! $checkRequestCallbackQuery || ! $checkRequestCallbackQuery->from) {
-            return null;
+        if ($requestCallbackQuery && $requestCallbackQuery->from) {
+            return $requestCallbackQuery->from;
         }
 
-        $requestBotMessage = $this->getRequestMessage();
-
-        if ( ! $requestBotMessage) {
-            return null;
-        }
-
-        $internalUser = $this->getUserFromCallbackQuery();
-
-        if ( ! $internalUser) {
-            $internalUser = UserRepository::getInstance()->create(
-                $requestBotMessage->chat->id,
-                $checkRequestCallbackQuery->from->id,
-                $checkRequestCallbackQuery->from->username,
-                LanguageEnum::EN
-            );
-        }
-
-        $this->setLanguage($internalUser->language);
-
-        return $internalUser;
+        return parent::getRequestFrom();
     }
 
     protected function getUserFromCallbackQuery(): ?User
@@ -61,7 +48,7 @@ abstract class AbstractAction extends AbstractCommand
             return null;
         }
 
-        return UserRepository::getInstance()->getByExternalUserId(
+        return UserRepository::getInstance()->getByExternalId(
             $checkRequestCallbackQuery->from->id
         );
     }

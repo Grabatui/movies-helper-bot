@@ -23,6 +23,8 @@ class UserLastMessage extends Model
 
     protected $guarded = [];
 
+    protected $primaryKey = 'user_id';
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

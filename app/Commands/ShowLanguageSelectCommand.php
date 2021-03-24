@@ -39,7 +39,7 @@ class ShowLanguageSelectCommand extends AbstractCommand
 
     private function makeLanguagesKeyboardMessage(): SendMessageRequest
     {
-        $request = new SendMessageRequest($this->getChat(), 'What language do you prefer?');
+        $request = new SendMessageRequest($this->getRequestChat(), trans('main.phrases.choose_language'));
 
         $buttons = [];
         foreach (array_chunk(LanguageEnum::NAMES, 3, true) as $languagesRow) {

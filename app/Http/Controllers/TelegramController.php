@@ -31,7 +31,7 @@ class TelegramController extends Controller
             }
 
             $facade->sendMessage(
-                new SendMessageRequest($message->chat, 'Sorry! I don\'t understand :(')
+                new SendMessageRequest($message->chat, trans('main.phrases.do_not_understand'))
             );
         }
     }
