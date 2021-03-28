@@ -42,17 +42,38 @@ class Service
         throw new UnknownRequestException();
     }
 
-    public function handleCommandByName(string $commandName, UpdateResponse $response): void
+    public function handleCommandByClassName(string $commandClassName, UpdateResponse $response): void
     {
         if (
-            ! in_array($commandName, $this->commands)
-            && ! in_array($commandName, config('telegram.actions'))
+            ! in_array($commandClassName, $this->commands)
+            && ! in_array($commandClassName, config('telegram.actions'))
         ) {
             throw new UnknownCommandException();
         }
 
         /** @var AbstractCommand $command */
-        $command = new $commandName($response);
+        $command = new $commandClassName($response);
+
+        $command->handle();
+    }
+
+    public function handleCommandByName(string $commandName, UpdateResponse $response): void
+    {
+        $actionByNames = $this->getActionsByNames();
+
+        $commandClassName = null;
+        if (array_key_exists($commandName, $actionByNames)) {
+            $commandClassName= $actionByNames[$commandName];
+        } elseif (array_key_exists($commandName, $this->commands)) {
+            $commandClassName = $this->commands[$commandName];
+        }
+
+        if ( ! $commandClassName) {
+            throw new UnknownCommandException();
+        }
+
+        /** @var AbstractCommand $command */
+        $command = new $commandClassName($response);
 
         $command->handle();
     }
@@ -108,5 +129,16 @@ class Service
     private function makeCommand(string $commandClass, UpdateResponse $response): AbstractCommand
     {
         return new $commandClass($response);
+    }
+
+    private function getActionsByNames(): array
+    {
+        $result = [];
+        /** @var AbstractAction $actionClassName */
+        foreach (config('telegram.actions') as $actionClassName) {
+            $result[$actionClassName::getName()] = $actionClassName;
+        }
+
+        return $result;
     }
 }

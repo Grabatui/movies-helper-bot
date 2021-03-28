@@ -17,5 +17,11 @@ return [
     ],
     'movie_lists' => [
         'select_list' => 'Select movies list',
+        'print_movie_name' => 'Print movie\'s name',
+        'print_movie_year' => 'Print movie\'s year',
+        'success' => 'Movie successfully added!',
+    ],
+    'errors' => [
+        'add_movie_year_not_numeric' => 'Year must be a number',
     ],
 ];

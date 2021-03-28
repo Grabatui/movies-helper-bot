@@ -5,6 +5,9 @@ namespace App\Commands\Actions;
 use App\Commands\ShowAddMovieSelectCommand;
 use App\Commands\ShowLanguageSelectCommand;
 
+/**
+ * @description Do any action from main menu buttons
+ */
 class DoMainMenuAction extends AbstractAction
 {
     public static function getName(): string

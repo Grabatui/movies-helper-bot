@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $user_id
  * @property int $message_id
  * @property string $type
- * @property string $data
+ * @property array $data
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
@@ -24,6 +24,10 @@ class UserLastMessage extends Model
     protected $guarded = [];
 
     protected $primaryKey = 'user_id';
+
+    protected $casts = [
+        'data' => 'array',
+    ];
 
     public function user(): BelongsTo
     {

@@ -1,5 +1,9 @@
 <?php
 
+use App\Commands\Actions\AddMovie\EndAction;
+use App\Commands\Actions\AddMovie\PrintMovieNameAction;
+use App\Commands\Actions\AddMovie\PrintMovieYearAction;
+use App\Commands\Actions\BackAction;
 use App\Commands\Actions\ChooseLanguageAction;
 use App\Commands\Actions\DoMainMenuAction;
 use App\Commands\HelloCommand;
@@ -20,7 +24,11 @@ return [
     ],
 
     'actions' => [
+        BackAction::class,
         ChooseLanguageAction::class,
         DoMainMenuAction::class,
+        PrintMovieNameAction::class,
+        PrintMovieYearAction::class,
+        EndAction::class,
     ],
 ];

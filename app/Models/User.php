@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
- * @property-read Collection $movieLists
+ * @property-read Collection $moviesLists
  *
  * @see UserObserver
  */

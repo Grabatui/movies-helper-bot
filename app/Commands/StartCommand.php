@@ -4,6 +4,9 @@ namespace App\Commands;
 
 use App\Repositories\UserRepository;
 
+/**
+ * @description First entrance. If user already exists - go to the main menu. Otherwise - show languages select
+ */
 class StartCommand extends AbstractCommand
 {
     public static function getName(): string

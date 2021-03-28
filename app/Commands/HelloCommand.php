@@ -2,6 +2,9 @@
 
 namespace App\Commands;
 
+/**
+ * @description Just saying hello
+ */
 class HelloCommand extends AbstractCommand
 {
     public static function getName(): string

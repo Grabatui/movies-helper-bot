@@ -9,6 +9,9 @@ use App\Telegram\Dto\Keyboard\InlineKeyboardButtonsRow;
 use App\Telegram\Dto\Keyboard\InlineKeyboardMarkup;
 use App\Telegram\Request\SendMessageRequest;
 
+/**
+ * @description Showing of languages select
+ */
 class ShowLanguageSelectCommand extends AbstractCommand
 {
     public static function getName(): string

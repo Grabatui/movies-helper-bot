@@ -8,6 +8,9 @@ use App\Telegram\Dto\Keyboard\KeyboardButtonsRow;
 use App\Telegram\Dto\Keyboard\ReplyKeyboardMarkup;
 use App\Telegram\Request\SendMessageRequest;
 
+/**
+ * @description Showing of main menu buttons
+ */
 class ShowDefaultMenuCommand extends AbstractCommand
 {
     public static function getName(): string

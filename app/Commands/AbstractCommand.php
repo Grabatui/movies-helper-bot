@@ -2,10 +2,14 @@
 
 namespace App\Commands;
 
+use App\Enum\AnswerEnum;
 use App\Enum\LanguageEnum;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use App\Telegram\Dto\Chat\Chat;
+use App\Telegram\Dto\Keyboard\KeyboardButton;
+use App\Telegram\Dto\Keyboard\KeyboardButtonsRow;
+use App\Telegram\Dto\Keyboard\ReplyKeyboardMarkup;
 use App\Telegram\Dto\Message\Message;
 use App\Telegram\Dto\User as UserDto;
 use App\Telegram\Facade;
@@ -31,7 +35,12 @@ abstract class AbstractCommand
 
     abstract public function handle(): void;
 
-    protected function handleCommand(string $commandName): void
+    protected function handleCommand(string $commandClassName): void
+    {
+        app(Service::class)->handleCommandByClassName($commandClassName, $this->request);
+    }
+
+    protected function handCommandByName(string $commandName): void
     {
         app(Service::class)->handleCommandByName($commandName, $this->request);
     }
@@ -56,6 +65,23 @@ abstract class AbstractCommand
         $this->facade->sendMessage(
             new SendMessageRequest($this->getRequestChat(), $message)
         );
+    }
+
+    protected function sendAnswerMessageWithBackButton(string $message): void
+    {
+        if ( ! $this->getRequestChat()) {
+            return;
+        }
+
+        $request = new SendMessageRequest($this->getRequestChat(), $message);
+
+        $request->replyMarkup = new ReplyKeyboardMarkup([
+            $this->getBackKeyboardButtonRow()
+        ]);
+
+        $request->replyMarkup->oneTimeKeyboard = true;
+
+        $this->facade->sendMessage($request);
     }
 
     protected function getUserFromMessage(): ?User
@@ -123,5 +149,12 @@ abstract class AbstractCommand
     protected function setLanguage(string $language): void
     {
         app('translator')->setLocale($language);
+    }
+
+    protected function getBackKeyboardButtonRow(): KeyboardButtonsRow
+    {
+        return new KeyboardButtonsRow([
+            new KeyboardButton(AnswerEnum::back())
+        ]);
     }
 }

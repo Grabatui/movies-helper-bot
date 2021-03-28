@@ -7,6 +7,9 @@ use App\Commands\ShowLanguageSelectCommand;
 use App\Enum\LanguageEnum;
 use App\Repositories\UserLastMessageRepository;
 
+/**
+ * @description Select language
+ */
 class ChooseLanguageAction extends AbstractAction
 {
     public static function getName(): string

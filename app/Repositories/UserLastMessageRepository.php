@@ -21,8 +21,6 @@ class UserLastMessageRepository
     {
         $exists = $this->getByUser($user);
 
-        $data = $data ? json_encode($data) : null;
-
         if ( ! $exists) {
             UserLastMessage::query()->create([
                 'user_id' => $user->id,
@@ -37,5 +35,10 @@ class UserLastMessageRepository
 
             $exists->save();
         }
+    }
+
+    public function save(UserLastMessage $lastMessage): void
+    {
+        $lastMessage->save();
     }
 }

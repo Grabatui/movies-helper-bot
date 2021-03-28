@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
- * @property-read MoviesList $list
+ * @property-read MoviesList $moviesList
  */
 class Movie extends Model
 {
@@ -24,7 +24,7 @@ class Movie extends Model
 
     protected $guarded = [];
 
-    public function list(): BelongsTo
+    public function moviesList(): BelongsTo
     {
         return $this->belongsTo(MoviesList::class);
     }

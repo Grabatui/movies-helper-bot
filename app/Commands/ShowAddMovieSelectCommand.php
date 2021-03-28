@@ -3,13 +3,17 @@
 namespace App\Commands;
 
 use App\Models\MoviesList;
-use App\Repositories\MovieListsRepository;
+use App\Repositories\MoviesListRepository;
+use App\Repositories\UserLastMessageRepository;
 use App\Telegram\Dto\Keyboard\KeyboardButton;
 use App\Telegram\Dto\Keyboard\KeyboardButtonsRow;
 use App\Telegram\Dto\Keyboard\ReplyKeyboardMarkup;
 use App\Telegram\Request\SendMessageRequest;
 use Illuminate\Database\Eloquent\Collection;
 
+/**
+ * @description Start process for adding movie to the user's list. Starts with movie list choosing
+ */
 class ShowAddMovieSelectCommand extends AbstractCommand
 {
     public static function getName(): string
@@ -25,11 +29,19 @@ class ShowAddMovieSelectCommand extends AbstractCommand
             return;
         }
 
-        $moviesLists = MovieListsRepository::getInstance()->getAllByUser($internalUser);
+        $moviesLists = MoviesListRepository::getInstance()->getAllByUser($internalUser);
 
         $request = $this->makeListsRequest($moviesLists);
 
-        $this->facade->sendMessage($request);
+        $sendMessageResponse = $this->facade->sendMessage($request);
+
+        if ($sendMessageResponse->message) {
+            UserLastMessageRepository::getInstance()->createOrUpdate(
+                $internalUser,
+                $sendMessageResponse->message->id,
+                static::getName()
+            );
+        }
     }
 
     private function makeListsRequest(Collection $moviesLists): SendMessageRequest
@@ -50,9 +62,7 @@ class ShowAddMovieSelectCommand extends AbstractCommand
             $buttons[] = $row;
         }
 
-        $buttons[] = new KeyboardButtonsRow([
-            new KeyboardButton('⬅️ ' . trans('main.back'))
-        ]);
+        $buttons[] = $this->getBackKeyboardButtonRow();
 
         $request->replyMarkup = new ReplyKeyboardMarkup($buttons);
 
