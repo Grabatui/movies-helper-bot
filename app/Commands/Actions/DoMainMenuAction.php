@@ -2,9 +2,7 @@
 
 namespace App\Commands\Actions;
 
-use App\Commands\ShowDefaultMenuCommand;
 use App\Commands\ShowLanguageSelectCommand;
-use App\Repositories\UserLastMessageRepository;
 
 class DoMainMenuAction extends AbstractAction
 {
@@ -18,14 +16,6 @@ class DoMainMenuAction extends AbstractAction
         $internalUser = $this->getOrCreateUserFromMessage();
 
         if ( ! $internalUser) {
-            return false;
-        }
-
-        $lastMessage = UserLastMessageRepository::getInstance()->getByUser(
-            $internalUser
-        );
-
-        if ( ! $lastMessage || $lastMessage->type !== ShowDefaultMenuCommand::getName()) {
             return false;
         }
 

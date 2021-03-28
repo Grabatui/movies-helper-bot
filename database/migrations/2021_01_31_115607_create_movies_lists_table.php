@@ -5,7 +5,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMoviesListTable extends Migration
+class CreateMoviesListsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class CreateMoviesListTable extends Migration
      */
     public function up()
     {
-        Schema::create('movies_list', function (Blueprint $table) {
+        Schema::create('movies_lists', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->boolean('is_default')->default(false);
@@ -31,6 +31,6 @@ class CreateMoviesListTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('movies_list');
+        Schema::dropIfExists('movies_lists');
     }
 }
