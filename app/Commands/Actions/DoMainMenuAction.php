@@ -2,6 +2,7 @@
 
 namespace App\Commands\Actions;
 
+use App\Commands\ShowAddMovieSelectCommand;
 use App\Commands\ShowLanguageSelectCommand;
 
 class DoMainMenuAction extends AbstractAction
@@ -37,6 +38,7 @@ class DoMainMenuAction extends AbstractAction
     {
         return [
             trans('main.main_menu.change_language') => ShowLanguageSelectCommand::class,
+            trans('main.main_menu.add_movie') => ShowAddMovieSelectCommand::class,
         ];
     }
 }

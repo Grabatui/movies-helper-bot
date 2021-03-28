@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'back' => 'Back',
     'phrases' => [
         'do_not_understand' => 'I can\'t recognize you :(',
         'choose_language' => 'What language do you prefer?',
@@ -13,5 +14,8 @@ return [
         'get_lists' => 'Get lists',
         'add_list' => 'Add new list',
         'change_language' => 'Change language',
+    ],
+    'movie_lists' => [
+        'select_list' => 'Select movies list',
     ],
 ];

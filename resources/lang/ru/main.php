@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'back' => 'Назад',
     'phrases' => [
         'do_not_understand' => 'Я Вас не понимаю :(',
         'choose_language' => 'Какой язык Вы предпочитаете?',
@@ -13,5 +14,8 @@ return [
         'get_lists' => 'Посмотреть списки',
         'add_list' => 'Добавить список',
         'change_language' => 'Изменить язык',
+    ],
+    'movie_lists' => [
+        'select_list' => 'Выберите список фильмов',
     ],
 ];
