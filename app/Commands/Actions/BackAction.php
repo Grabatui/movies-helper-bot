@@ -2,8 +2,8 @@
 
 namespace App\Commands\Actions;
 
+use App\Commands\ShowDefaultMenuCommand;
 use App\Enum\AnswerEnum;
-use App\Repositories\UserLastMessageRepository;
 
 /**
  * @description Back button for many actions
@@ -28,14 +28,8 @@ class BackAction extends AbstractAction
 
     public function handle(): void
     {
-        $lastMessage = UserLastMessageRepository::getInstance()->getByUser(
-            $this->getUserFromMessage()
+        $this->handleCommand(
+            ShowDefaultMenuCommand::class,
         );
-
-        if ( ! $lastMessage) {
-            return;
-        }
-
-        $this->handCommandByName($lastMessage->type);
     }
 }
