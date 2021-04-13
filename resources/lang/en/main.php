@@ -2,6 +2,8 @@
 
 return [
     'back' => 'Back',
+    'next_page' => 'Next page',
+    'previous_page' => 'Prev page',
     'phrases' => [
         'do_not_understand' => 'I can\'t recognize you :(',
         'choose_language' => 'What language do you prefer?',
@@ -20,6 +22,7 @@ return [
         'print_movie_name' => 'Print movie\'s name',
         'print_movie_year' => 'Print movie\'s year',
         'success' => 'Movie successfully added!',
+        'find_movie_description' => 'Type a name or a year of movie from your movie lists',
     ],
     'errors' => [
         'add_movie_year_not_numeric' => 'Year must be a number',

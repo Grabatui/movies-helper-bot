@@ -2,6 +2,8 @@
 
 return [
     'back' => 'Назад',
+    'next_page' => 'След. страница',
+    'previous_page' => 'Пред. страница',
     'phrases' => [
         'do_not_understand' => 'Я Вас не понимаю :(',
         'choose_language' => 'Какой язык Вы предпочитаете?',
@@ -20,6 +22,7 @@ return [
         'print_movie_name' => 'Напишите название фильма',
         'print_movie_year' => 'Напишите год фильма',
         'success' => 'Фильм успешно добавлен!',
+        'find_movie_description' => 'Введите название и/или год фильма из Ваших списков',
     ],
     'errors' => [
         'add_movie_year_not_numeric' => 'Год должен быть числом',

@@ -3,12 +3,10 @@
 namespace App\Commands\Actions\AddMovie;
 
 use App\Commands\Actions\AbstractAction;
-use App\Commands\ShowAddMovieSelectCommand;
+use App\Commands\ShowAddMovieCommand;
 use App\Models\MoviesList;
 use App\Repositories\MoviesListRepository;
 use App\Repositories\UserLastMessageRepository;
-use App\Telegram\Dto\Keyboard\ReplyKeyboardMarkup;
-use App\Telegram\Request\SendMessageRequest;
 
 /**
  * @description Set selected movies list in the DB and ask for the movie's name
@@ -53,23 +51,15 @@ class PrintMovieNameAction extends AbstractAction
 
     private function setMoviesList(): void
     {
-        if ( ! $this->getRequestMessage() || ! $this->getRequestMessage()->text) {
-            return;
-        }
-
-        $internalUser = $this->getOrCreateUserFromMessage();
-
-        if ( ! $internalUser) {
-            return;
-        }
-
-        $lastMessage = UserLastMessageRepository::getInstance()->getByUser(
-            $internalUser
+        $lastMessage = $this->getLastUserMessage(
+            ShowAddMovieCommand::getName()
         );
 
-        if (! $lastMessage || $lastMessage->type !== ShowAddMovieSelectCommand::getName()) {
+        if ( ! $lastMessage) {
             return;
         }
+
+        $internalUser = $this->getUserFromMessage();
 
         $this->selectedMoviesList = MoviesListRepository::getInstance()->getMoviesListByUserAndName(
             $internalUser,

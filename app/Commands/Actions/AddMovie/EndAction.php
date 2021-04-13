@@ -8,7 +8,6 @@ use App\Models\MoviesList;
 use App\Models\UserLastMessage;
 use App\Repositories\MovieRepository;
 use App\Repositories\MoviesListRepository;
-use App\Repositories\UserLastMessageRepository;
 
 /**
  * @description End of the adding movie - get incoming year, add movie to the DB and show main menu
@@ -48,9 +47,19 @@ class EndAction extends AbstractAction
 
     private function setMoviesList(): void
     {
-        if ( ! $this->getRequestMessage() || ! $this->getRequestMessage()->text) {
+        $lastMessage = $this->getLastUserMessage(
+            PrintMovieYearAction::getName()
+        );
+
+        if (
+            ! $lastMessage
+            || ! $lastMessage->data
+            || empty($lastMessage->data['movies_list_id'])
+        ) {
             return;
         }
+
+        $this->userLastMessage = $lastMessage;
 
         if ( ! is_numeric($this->getRequestMessage()->text)) {
             $this->sendAnswerMessage(trans('main.errors.add_movie_year_not_numeric'));
@@ -59,23 +68,6 @@ class EndAction extends AbstractAction
         }
 
         $internalUser = $this->getOrCreateUserFromMessage();
-
-        if ( ! $internalUser) {
-            return;
-        }
-
-        $this->userLastMessage = UserLastMessageRepository::getInstance()->getByUser(
-            $internalUser
-        );
-
-        if (
-            ! $this->userLastMessage
-            || ! $this->userLastMessage->data
-            || empty($this->userLastMessage->data['movies_list_id'])
-            || $this->userLastMessage->type !== PrintMovieYearAction::getName()
-        ) {
-            return;
-        }
 
         $this->moviesList = MoviesListRepository::getInstance()->getMoviesListByUserAndId(
             $internalUser,

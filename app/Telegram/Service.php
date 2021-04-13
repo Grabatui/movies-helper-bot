@@ -26,6 +26,8 @@ class Service
         if ($commandName && array_key_exists($commandName, $this->commands)) {
             $command = $this->makeCommand($this->commands[$commandName], $response);
 
+            app('log')->info('Called command ' . $command::getName());
+
             $command->handle();
 
             return;
@@ -54,6 +56,8 @@ class Service
         /** @var AbstractCommand $command */
         $command = new $commandClassName($response);
 
+        app('log')->info('Called command ' . $command::getName());
+
         $command->handle();
     }
 
@@ -74,6 +78,8 @@ class Service
 
         /** @var AbstractCommand $command */
         $command = new $commandClassName($response);
+
+        app('log')->info('Called command ' . $command::getName());
 
         $command->handle();
     }

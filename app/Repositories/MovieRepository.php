@@ -4,6 +4,8 @@ namespace App\Repositories;
 
 use App\Models\Movie;
 use App\Models\MoviesList;
+use App\Repositories\Entity\MovieSearchParameters;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class MovieRepository
 {
@@ -24,5 +26,13 @@ class MovieRepository
         $movie->save();
 
         return $movie;
+    }
+
+    public function search(MovieSearchParameters $searchParameters): LengthAwarePaginator
+    {
+        return Movie::query()
+            ->where('name', 'like', '%' . $searchParameters->searchString . '%')
+            ->orWhere('year', $searchParameters->searchString)
+            ->paginate($searchParameters->limit, ['*'], 'page', $searchParameters->page);
     }
 }

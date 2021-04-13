@@ -19,13 +19,13 @@ class MoviesListRepository
     }
 
     /** @noinspection PhpIncompatibleReturnTypeInspection */
-    public function getMoviesListByUserAndName(User $user, string $moviesListName): MoviesList
+    public function getMoviesListByUserAndName(User $user, string $moviesListName): ?MoviesList
     {
         return $user->moviesLists()->where('name', $moviesListName)->first();
     }
 
     /** @noinspection PhpIncompatibleReturnTypeInspection */
-    public function getMoviesListByUserAndId(User $user, int $moviesListId): MoviesList
+    public function getMoviesListByUserAndId(User $user, int $moviesListId): ?MoviesList
     {
         return $user->moviesLists()->where('id', $moviesListId)->first();
     }

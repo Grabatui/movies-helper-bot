@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Collection;
 /**
  * @description Start process for adding movie to the user's list. Starts with movie list choosing
  */
-class ShowAddMovieSelectCommand extends AbstractCommand
+class ShowAddMovieCommand extends AbstractCommand
 {
     public static function getName(): string
     {

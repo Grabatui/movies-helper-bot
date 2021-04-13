@@ -28,4 +28,9 @@ class Movie extends Model
     {
         return $this->belongsTo(MoviesList::class);
     }
+
+    public function getFullName(): string
+    {
+        return sprintf('%s (%d) [%s] [#%d]', $this->name, $this->year, $this->moviesList->name, $this->id);
+    }
 }

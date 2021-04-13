@@ -50,24 +50,8 @@ class PrintMovieYearAction extends AbstractAction
 
     private function setMoviesList(): void
     {
-        if ( ! $this->getRequestMessage() || ! $this->getRequestMessage()->text) {
-            return;
-        }
-
-        $internalUser = $this->getOrCreateUserFromMessage();
-
-        if ( ! $internalUser) {
-            return;
-        }
-
-        $lastMessage = UserLastMessageRepository::getInstance()->getByUser(
-            $internalUser
+        $this->userLastMessage = $this->getLastUserMessage(
+            PrintMovieNameAction::getName()
         );
-
-        if (! $lastMessage || $lastMessage->type !== PrintMovieNameAction::getName()) {
-            return;
-        }
-
-        $this->userLastMessage = $lastMessage;
     }
 }

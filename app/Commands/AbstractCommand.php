@@ -5,6 +5,8 @@ namespace App\Commands;
 use App\Enum\AnswerEnum;
 use App\Enum\LanguageEnum;
 use App\Models\User;
+use App\Models\UserLastMessage;
+use App\Repositories\UserLastMessageRepository;
 use App\Repositories\UserRepository;
 use App\Telegram\Dto\Chat\Chat;
 use App\Telegram\Dto\Keyboard\KeyboardButton;
@@ -14,6 +16,7 @@ use App\Telegram\Dto\Message\Message;
 use App\Telegram\Dto\User as UserDto;
 use App\Telegram\Facade;
 use App\Telegram\Request\SendMessageRequest;
+use App\Telegram\Response\SendMessageResponse;
 use App\Telegram\Response\UpdateResponse;
 use App\Telegram\Service;
 
@@ -67,10 +70,10 @@ abstract class AbstractCommand
         );
     }
 
-    protected function sendAnswerMessageWithBackButton(string $message): void
+    protected function sendAnswerMessageWithBackButton(string $message): ?SendMessageResponse
     {
         if ( ! $this->getRequestChat()) {
-            return;
+            return null;
         }
 
         $request = new SendMessageRequest($this->getRequestChat(), $message);
@@ -81,7 +84,7 @@ abstract class AbstractCommand
 
         $request->replyMarkup->oneTimeKeyboard = true;
 
-        $this->facade->sendMessage($request);
+        return $this->facade->sendMessage($request);
     }
 
     protected function getUserFromMessage(): ?User
@@ -156,5 +159,28 @@ abstract class AbstractCommand
         return new KeyboardButtonsRow([
             new KeyboardButton(AnswerEnum::back())
         ]);
+    }
+
+    protected function getLastUserMessage(?string $checkCommandName = null): ?UserLastMessage
+    {
+        if ( ! $this->getRequestMessage() || ! $this->getRequestMessage()->text) {
+            return null;
+        }
+
+        $internalUser = $this->getUserFromMessage();
+
+        if ( ! $internalUser) {
+            return null;
+        }
+
+        $lastMessage = UserLastMessageRepository::getInstance()->getByUser(
+            $internalUser
+        );
+
+        if ( ! $lastMessage || ($checkCommandName && $lastMessage->type == $checkCommandName)) {
+            return null;
+        }
+
+        return $lastMessage;
     }
 }
